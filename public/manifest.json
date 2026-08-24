@@ -1,0 +1,19 @@
+
+{
+  "name": "아차사고 발굴",
+  "short_name": "아차사고",
+  "description": "당신의 작은 개선이 큰 사고를 예방합니다.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#161D27",
+  "theme_color": "#FFC845",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
