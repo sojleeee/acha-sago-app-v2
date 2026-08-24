@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import {
   AlertTriangle, Camera, MapPin, Clock, User, Phone,
-  X, Loader2, CheckCircle2, ChevronRight, CircleCheck,
+  X, Loader2, CheckCircle2, ChevronRight, CircleCheck, ClipboardList, Send,
 } from "lucide-react";
 
 // ── 팔레트 ──────────────────────────────────────────
