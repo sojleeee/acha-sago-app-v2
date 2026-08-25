@@ -731,7 +731,7 @@ function ReportForm({ onSubmit }) {
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>이름, 휴대폰 번호, 소속, 사진</td>
+                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>이름, 휴대폰 번호, 소속</td>
                   <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>위험요인 신고 접수 및 개선 조치 처리, 담당 부서 배정 및 조치 결과 확인, 우수 참여자 포상 심사</td>
                   <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>목적 달성 후 즉시 파기</td>
                 </tr>
