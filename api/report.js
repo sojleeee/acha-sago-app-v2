@@ -160,9 +160,10 @@ export default async function handler(req, res) {
     };
 
     let brevoRes = await sendToBrevo(apiKey, emailPayload);
-    if (!brevoRes.ok) {
-      // 순간적인 오류일 수 있으니 2초 후 한 번만 더 시도
-      await sleep(2000);
+    // 재시도해도 소용없는 오류(예: 400 잘못된 요청, 401 인증 오류)는 바로 실패 처리하고,
+    // 서버 쪽 일시적 오류(5xx)일 때만 1.5초 후 한 번 더 시도
+    if (!brevoRes.ok && brevoRes.status >= 500) {
+      await sleep(1500);
       brevoRes = await sendToBrevo(apiKey, emailPayload);
     }
 
