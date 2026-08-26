@@ -82,11 +82,22 @@ function compressImage(file, maxW = 900, quality = 0.62) {
 
 // 신고 내용을 어디에도 저장하지 않고, 완성된 순간 바로 서버(API)를 거쳐 이메일로만 보냅니다.
 async function sendReportEmail(payload) {
-  const res = await fetch("/api/report", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 20000); // 20초 넘으면 포기
+  let res;
+  try {
+    res = await fetch("/api/report", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+  } catch (e) {
+    if (e.name === "AbortError") throw new Error("네트워크 상태가 불안정해서 응답이 없어요.");
+    throw new Error("네트워크 연결을 확인해주세요.");
+  } finally {
+    clearTimeout(timeoutId);
+  }
   if (!res.ok) {
     let msg = "메일 발송에 실패했어요.";
     try { const data = await res.json(); if (data?.error) msg = data.error; } catch {}
