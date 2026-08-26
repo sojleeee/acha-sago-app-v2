@@ -732,7 +732,7 @@ function ReportForm({ onSubmit }) {
               <tbody>
                 <tr>
                   <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>이름, 휴대폰 번호, 소속</td>
-                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>위험요인 신고 접수 및 개선 조치 처리, 담당 부서 배정 및 조치 결과 확인, 우수 참여자 포상 심사</td>
+                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>위험요인 신고 접수 및 개선 조치 처리, 담당 부서 배정, 우수 참여자 포상 심사</td>
                   <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>수집일로부터 6개월 이내 파기</td>
                 </tr>
               </tbody>
