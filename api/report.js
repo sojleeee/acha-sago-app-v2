@@ -54,9 +54,32 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;");
 }
 
+async function sendToBrevo(apiKey, payload) {
+  return fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "POST만 허용됩니다." });
+    return;
+  }
+
+  // 우리 앱(같은 도메인)에서 온 요청인지 가볍게 확인 — 완벽한 보안은 아니지만
+  // 외부에서 이 주소로 스팸성 요청을 무작정 반복 전송하는 걸 어느 정도 막아줌
+  const origin = req.headers.origin || req.headers.referer || "";
+  const host = req.headers.host || "";
+  if (host && origin && !origin.includes(host)) {
+    res.status(403).json({ error: "허용되지 않은 요청입니다." });
     return;
   }
 
@@ -128,25 +151,24 @@ export default async function handler(req, res) {
       }
     }
 
-    const brevoRes = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "api-key": apiKey,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: JSON.stringify({
-        sender: { email: SENDER_EMAIL, name: SENDER_NAME },
-        to: [{ email: FIXED_RECIPIENT }],
-        subject: `[아차사고] ${statusLabel} - ${hazardLabel(report)}`,
-        htmlContent,
-        ...(attachment.length > 0 ? { attachment } : {}),
-      }),
-    });
+    const emailPayload = {
+      sender: { email: SENDER_EMAIL, name: SENDER_NAME },
+      to: [{ email: FIXED_RECIPIENT }],
+      subject: `[아차사고] ${statusLabel} - ${hazardLabel(report)}`,
+      htmlContent,
+      ...(attachment.length > 0 ? { attachment } : {}),
+    };
+
+    let brevoRes = await sendToBrevo(apiKey, emailPayload);
+    if (!brevoRes.ok) {
+      // 순간적인 오류일 수 있으니 2초 후 한 번만 더 시도
+      await sleep(2000);
+      brevoRes = await sendToBrevo(apiKey, emailPayload);
+    }
 
     if (!brevoRes.ok) {
       const errText = await brevoRes.text();
-      console.error("Brevo 발송 실패:", brevoRes.status, errText);
+      console.error("Brevo 발송 실패(재시도 포함):", brevoRes.status, errText);
       res.status(502).json({ error: "메일 발송에 실패했습니다." });
       return;
     }
