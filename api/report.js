@@ -6,7 +6,6 @@ const SENDER_EMAIL = "taejongchoi3136@gmail.com"; // Brevo에 발신자로 인�
 const SENDER_NAME = "아차사고 발굴";
 
 // 안전환경실(총괄) — 신고 결과와 상관없이 항상 받는 사람들 (안전관리자, 실장님)
-// ⚠ 아직 이메일이 확정되지 않아 비워뒀어요. 채워 넣으면 바로 적용됩니다.
 const SAFETY_HEAD_EMAILS = [
   "ctjzzang99@slc.or.kr", // 안전관리자
   "ksk3075@slc.or.kr", // 실장님 
