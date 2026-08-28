@@ -5,9 +5,34 @@
 const SENDER_EMAIL = "taejongchoi3136@gmail.com"; // Brevo에 발신자로 인증된 이메일
 const SENDER_NAME = "아차사고 발굴";
 
-// 지금은 부서 구분 없이 고정 수신자 한 명에게만 보냅니다.
-// 나중에 부서별 수신자를 나누게 되면 이 부분을 매핑 테이블로 바꾸면 됩니다.
-const FIXED_RECIPIENT = "ctjzzang99@slc.or.kr";
+// 안전환경실(총괄) — 신고 결과와 상관없이 항상 받는 사람들 (안전관리자, 실장님)
+// ⚠ 아직 이메일이 확정되지 않아 비워뒀어요. 채워 넣으면 바로 적용됩니다.
+const SAFETY_HEAD_EMAILS = [
+  "ctjzzang99@slc.or.kr", // 안전관리자
+  "ksk3075@slc.or.kr", // 실장님 
+];
+
+// 부서별 담당자 이메일 매핑 — "조치 요청(부서 배정)" 신고일 때, 해당 부서 관리감독자·안전담당자에게 같이 발송됩니다.
+// ⚠ 아직 실제 이메일 주소가 확정되지 않아 비워뒀어요. 확정되는 대로 큰따옴표 안에 채워 넣으면 바로 적용됩니다.
+// (안전환경실은 위 SAFETY_HEAD_EMAILS로 항상 받으므로 여기 따로 안 넣어도 됩니다.)
+const DEPT_EMAILS = {
+  "감사실":     { manager: "", safety: "" }, // manager: 관리감독자(부서장), safety: 안전담당자
+  "안전환경실": { manager: "", safety: "" },
+  "ESG전략실":  { manager: "", safety: "" },
+  "홍보비서실": { manager: "", safety: "" },
+  "기획조정처": { manager: "", safety: "" },
+  "경영지원처": { manager: "", safety: "" },
+  "매립시설처": { manager: "", safety: "" },
+  "매립운영처": { manager: "", safety: "" },
+  "물환경처":   { manager: "", safety: "" },
+  "자원사업처": { manager: "", safety: "" },
+  "탄소사업처": { manager: "", safety: "" },
+  "에너지사업처": { manager: "", safety: "" },
+  "지역상생처": { manager: "", safety: "" },
+  "체육공원처": { manager: "", safety: "" },
+  "기술정보처": { manager: "", safety: "" },
+  "연구분석처": { manager: "", safety: "" },
+};
 
 const HAZARD_LABELS = {
   slip: "🚶 넘어짐·미끄러짐·걸림",
@@ -151,9 +176,25 @@ export default async function handler(req, res) {
       }
     }
 
+    // 수신자 구성: 안전환경실(안전관리자, 실장님)은 항상 포함.
+    // "부서 배정" 신고면서 해당 부서 이메일이 매핑돼 있으면 관리감독자·안전담당자도 같이 받음(중복이면 한 번만).
+    const recipients = new Set(SAFETY_HEAD_EMAILS.filter(Boolean));
+    if (resultType === "deferred") {
+      const dept = DEPT_EMAILS[assignedDept];
+      if (dept?.manager) recipients.add(dept.manager);
+      if (dept?.safety) recipients.add(dept.safety);
+      // 아직 매핑 안 된 부서면 안전환경실만 받고, 나중에 채워지면 자동으로 같이 감
+    }
+    if (recipients.size === 0) {
+      // 이메일이 하나도 확정 안 된 극단적인 경우를 대비한 안전장치
+      console.error("수신자가 한 명도 설정되어 있지 않습니다. SAFETY_HEAD_EMAILS를 확인하세요.");
+      res.status(500).json({ error: "수신자 설정이 되어 있지 않습니다. 관리자에게 문의하세요." });
+      return;
+    }
+
     const emailPayload = {
       sender: { email: SENDER_EMAIL, name: SENDER_NAME },
-      to: [{ email: FIXED_RECIPIENT }],
+      to: [...recipients].map((email) => ({ email })),
       subject: `[아차사고] ${statusLabel} - ${hazardLabel(report)}`,
       htmlContent,
       ...(attachment.length > 0 ? { attachment } : {}),
