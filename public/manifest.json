@@ -1,7 +1,7 @@
 
 {
-  "name": "아차사고 발굴",
-  "short_name": "아차사고",
+  "name": "아차알리미",
+  "short_name": "아차알리미",
   "description": "당신의 작은 개선이 큰 사고를 예방합니다.",
   "start_url": "/",
   "display": "standalone",
