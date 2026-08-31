@@ -6,9 +6,10 @@ const SENDER_EMAIL = "taejongchoi3136@gmail.com"; // Brevo에 발신자로 인�
 const SENDER_NAME = "아차사고 발굴";
 
 // 안전환경실(총괄) — 신고 결과와 상관없이 항상 받는 사람들 (안전관리자, 실장님)
+// ⚠ 아직 이메일이 확정되지 않아 비워뒀어요. 채워 넣으면 바로 적용됩니다.
 const SAFETY_HEAD_EMAILS = [
-  "ctjzzang99@slc.or.kr", // 안전관리자
-  "ksk3075@slc.or.kr", // 실장님 
+  "ctjzzang99@slc.or.kr", // 안전관리자 (기존 확정 주소)
+  "", // 실장님 — 확정되면 채워주세요
 ];
 
 // 부서별 담당자 이메일 매핑 — "조치 요청(부서 배정)" 신고일 때, 해당 부서 관리감독자·안전담당자에게 같이 발송됩니다.
@@ -127,7 +128,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    const statusLabel = resultType === "immediate" ? "즉시 조치 완료" : "조치 요청 (담당 부서 배정)";
+    const statusLabel = resultType === "immediate" ? "본인 조치 완료" : "타 부서 조치 요청";
 
     const rows = [
       ["소속", report.dept],
