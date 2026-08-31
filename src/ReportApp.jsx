@@ -250,16 +250,15 @@ function StepChoose({ onChoose, onBack }) {
   return (
     <div style={{ animation: "popin .25s ease" }}>
       <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 4, background: C.surface, border: `1.5px solid ${C.line}`, borderRadius: 10, color: C.text, fontSize: 13, fontWeight: 600, cursor: "pointer", marginBottom: 16, padding: "8px 14px" }}>← 발견으로 돌아가기</button>
-      <div className="osw" style={{ fontSize: 17, fontWeight: 700, marginBottom: 6 }}>위험요소를 바로 조치할 수 있나요?</div>
-      <p style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>현장에서 바로 위험 요소를 제거하거나 조치할 수 있는지 선택해주세요.</p>
+      <div className="osw" style={{ fontSize: 17, fontWeight: 700, marginBottom: 20 }}>이 위험요소를 어떻게 조치할 수 있나요?</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <button onClick={() => onChoose("immediate")} style={{ display: "flex", alignItems: "center", gap: 14, background: `${C.green}18`, border: `1.5px solid ${C.green}`, borderRadius: 14, padding: "16px 18px", cursor: "pointer", textAlign: "left" }}>
           <div style={{ width: 44, height: 44, borderRadius: 12, background: `${C.green}30`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: 22 }}>
             🔧
           </div>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: C.green }}>바로 조치 가능해요</div>
-            <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>지금 바로 조치 후 결과를 기록합니다</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: C.green }}>제가 조치할 수 있어요</div>
+            <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>제 권한·범위 안에서 처리 가능해요. 조치 후 결과를 기록합니다</div>
           </div>
           <ChevronRight size={18} color={C.green} style={{ marginLeft: "auto" }} />
         </button>
@@ -269,7 +268,7 @@ function StepChoose({ onChoose, onBack }) {
           </div>
           <div>
             <div style={{ fontSize: 15, fontWeight: 700, color: C.red }}>조치가 필요해요</div>
-            <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>담당자에게 알림을 보냅니다</div>
+            <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>담당 부서에 알림을 보냅니다</div>
           </div>
           <ChevronRight size={18} color={C.red} style={{ marginLeft: "auto" }} />
         </button>
