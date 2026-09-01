@@ -30,7 +30,6 @@ const HAZARD_TYPES = [
   { id: "machine",  label: "🚜 기계·설비",             color: "#9B84E8" },
   { id: "vehicle",  label: "🚗 차량·운반장비",         color: "#E8974C" },
   { id: "chemical", label: "🧪 화학물질",              color: "#4CAF7D" },
-  { id: "ppe",      label: "🦺 보호구",                color: "#5A9BE8" },
   { id: "env",      label: "🚧 작업환경",              color: "#C77D4C" },
   { id: "etc",      label: "📋 기타",                  color: C.muted },
 ];
