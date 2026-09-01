@@ -358,7 +358,7 @@ function StepConfirmDefer({ report, onConfirm, onBack }) {
         <div onClick={() => !submitting && setShowWarn(false)} style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
           <div onClick={(e) => e.stopPropagation()} style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 16, padding: 22, width: "100%", maxWidth: 320, animation: "popin .2s ease", textAlign: "center" }}>
             <div style={{ fontSize: 28, marginBottom: 8 }}>⚠️</div>
-            <p style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>요청 후에는 취소하거나 수정할 수 없어요.<br />정말 요청하시겠어요?</p>
+            <p style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>정말 요청하시겠어요?</p>
             <div style={{ display: "flex", gap: 8 }}>
               <button onClick={() => setShowWarn(false)} disabled={submitting} style={{ flex: 1, padding: "11px 0", background: "transparent", border: `1px solid ${C.line}`, borderRadius: 10, color: C.muted, cursor: "pointer", fontSize: 14 }}>취소</button>
               <button onClick={doConfirm} disabled={submitting} className="osw" style={{ flex: 2, padding: "11px 0", background: C.red, border: "none", borderRadius: 10, color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 700, opacity: submitting ? 0.7 : 1 }}>
@@ -460,7 +460,7 @@ function StepAction({ report, onDone, onBack }) {
           <div onClick={() => !submitting && setShowWarn(false)} style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
             <div onClick={(e) => e.stopPropagation()} style={{ background: C.bg, border: `1px solid ${C.line}`, borderRadius: 16, padding: 22, width: "100%", maxWidth: 320, animation: "popin .2s ease", textAlign: "center" }}>
               <div style={{ fontSize: 28, marginBottom: 8 }}>⚠️</div>
-              <p style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>등록 후에는 수정할 수 없어요.<br />정말 등록하시겠어요?</p>
+              <p style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>정말 등록하시겠어요?</p>
               <div style={{ display: "flex", gap: 8 }}>
                 <button onClick={() => setShowWarn(false)} disabled={submitting} style={{ flex: 1, padding: "11px 0", background: "transparent", border: `1px solid ${C.line}`, borderRadius: 10, color: C.muted, cursor: "pointer", fontSize: 14 }}>취소</button>
                 <button onClick={() => { setShowWarn(false); handleFinalSubmit(); }} disabled={submitting} className="osw" style={{ flex: 2, padding: "11px 0", background: C.green, border: "none", borderRadius: 10, color: C.bg, cursor: "pointer", fontSize: 14, fontWeight: 700, opacity: submitting ? 0.7 : 1 }}>
