@@ -9,7 +9,7 @@ const SENDER_NAME = "아차사고 발굴";
 // ⚠ 아직 이메일이 확정되지 않아 비워뒀어요. 채워 넣으면 바로 적용됩니다.
 const SAFETY_HEAD_EMAILS = [
   "ctjzzang99@slc.or.kr", // 안전관리자 (기존 확정 주소)
-  "", // 실장님 — 확정되면 채워주세요
+  "ksk3075@slc.or.kr", // 실장님
 ];
 
 // 부서별 담당자 이메일 매핑 — "조치 요청(부서 배정)" 신고일 때, 해당 부서 관리감독자·안전담당자에게 같이 발송됩니다.
@@ -28,7 +28,7 @@ const DEPT_EMAILS = {
   "자원사업처": { manager: "", safety: "" },
   "탄소사업처": { manager: "", safety: "" },
   "에너지사업처": { manager: "", safety: "" },
-  "지역상생처": { manager: "", safety: "" },
+  "지역상생처": { manager: "jhhan@slc.or.kr", safety: "" },
   "체육공원처": { manager: "", safety: "" },
   "기술정보처": { manager: "", safety: "" },
   "연구분석처": { manager: "", safety: "" },
@@ -42,7 +42,6 @@ const HAZARD_LABELS = {
   machine: "🚜 기계·설비",
   vehicle: "🚗 차량·운반장비",
   chemical: "🧪 화학물질",
-  ppe: "🦺 보호구",
   env: "🚧 작업환경",
   etc: "📋 기타",
 };
@@ -130,39 +129,41 @@ export default async function handler(req, res) {
 
     const statusLabel = resultType === "immediate" ? "본인 조치 완료" : "타 부서 조치 요청";
 
-    const rows = [
-      ["소속", report.dept],
-      ["신고자", report.reporterName],
-      ["연락처", report.phone],
-      ["위험 유형", hazardLabel(report)],
-      ["발견 일시", fmtDateTime(report.occurredAt)],
-      ["발견 장소", report.location],
-      ["상황 설명", report.desc],
-    ];
-    if (resultType === "deferred") {
-      rows.push(["요청 부서", assignedDept || "-"]);
-    }
-    if (resultType === "immediate") {
-      rows.push(["조치 내용", actionDesc || "-"]);
+    // 신원 정보(소속/이름/연락처) 포함 여부에 따라 표를 두 버전으로 만듦
+    function buildRows({ includeIdentity }) {
+      const rows = [];
+      if (includeIdentity) {
+        rows.push(["소속", report.dept]);
+        rows.push(["신고자", report.reporterName]);
+        rows.push(["연락처", report.phone]);
+      }
+      rows.push(["위험 유형", hazardLabel(report)]);
+      rows.push(["발견 일시", fmtDateTime(report.occurredAt)]);
+      rows.push(["발견 장소", report.location]);
+      rows.push(["상황 설명", report.desc]);
+      if (resultType === "deferred") rows.push(["요청 부서", assignedDept || "-"]);
+      if (resultType === "immediate") rows.push(["조치 내용", actionDesc || "-"]);
+      return rows;
     }
 
-    const rowsHtml = rows
-      .map(
-        ([label, value]) => `
-        <tr>
-          <td style="padding:8px 12px;border-bottom:1px solid #E0E6D6;color:#77816E;font-size:13px;white-space:nowrap;">${escapeHtml(label)}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #E0E6D6;color:#1F2A17;font-size:14px;">${escapeHtml(value)}</td>
-        </tr>`
-      )
-      .join("");
-
-    const htmlContent = `
-      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;">
-        <h2 style="color:#1F2A17;">아차사고 발굴 신고 — ${escapeHtml(statusLabel)}</h2>
-        <table style="width:100%;border-collapse:collapse;margin-top:12px;">
-          ${rowsHtml}
-        </table>
-      </div>`;
+    function buildHtml(rows) {
+      const rowsHtml = rows
+        .map(
+          ([label, value]) => `
+          <tr>
+            <td style="padding:8px 12px;border-bottom:1px solid #E0E6D6;color:#77816E;font-size:13px;white-space:nowrap;">${escapeHtml(label)}</td>
+            <td style="padding:8px 12px;border-bottom:1px solid #E0E6D6;color:#1F2A17;font-size:14px;">${escapeHtml(value)}</td>
+          </tr>`
+        )
+        .join("");
+      return `
+        <div style="font-family:sans-serif;max-width:520px;margin:0 auto;">
+          <h2 style="color:#1F2A17;">아차사고 발굴 신고 — ${escapeHtml(statusLabel)}</h2>
+          <table style="width:100%;border-collapse:collapse;margin-top:12px;">
+            ${rowsHtml}
+          </table>
+        </div>`;
+    }
 
     const attachment = [];
     const reportPhotoB64 = extractBase64(report.photo);
@@ -176,41 +177,53 @@ export default async function handler(req, res) {
       }
     }
 
-    // 수신자 구성: 안전환경실(안전관리자, 실장님)은 항상 포함.
-    // "부서 배정" 신고면서 해당 부서 이메일이 매핑돼 있으면 관리감독자·안전담당자도 같이 받음(중복이면 한 번만).
-    const recipients = new Set(SAFETY_HEAD_EMAILS.filter(Boolean));
+    // 안전환경실은 신원 정보 포함, 부서(관리감독자·안전담당자)는 신원 정보 제외하고 발송
+    const safetyRecipients = new Set(SAFETY_HEAD_EMAILS.filter(Boolean));
+    const deptRecipients = new Set();
     if (resultType === "deferred") {
       const dept = DEPT_EMAILS[assignedDept];
-      if (dept?.manager) recipients.add(dept.manager);
-      if (dept?.safety) recipients.add(dept.safety);
-      // 아직 매핑 안 된 부서면 안전환경실만 받고, 나중에 채워지면 자동으로 같이 감
+      if (dept?.manager) deptRecipients.add(dept.manager);
+      if (dept?.safety) deptRecipients.add(dept.safety);
     }
-    if (recipients.size === 0) {
-      // 이메일이 하나도 확정 안 된 극단적인 경우를 대비한 안전장치
+    // 혹시 같은 주소가 안전환경실에도 있고 부서에도 있으면, 신원 정보 포함된 쪽(안전환경실)만 받도록 정리
+    for (const email of safetyRecipients) deptRecipients.delete(email);
+
+    if (safetyRecipients.size === 0 && deptRecipients.size === 0) {
       console.error("수신자가 한 명도 설정되어 있지 않습니다. SAFETY_HEAD_EMAILS를 확인하세요.");
       res.status(500).json({ error: "수신자 설정이 되어 있지 않습니다. 관리자에게 문의하세요." });
       return;
     }
 
-    const emailPayload = {
-      sender: { email: SENDER_EMAIL, name: SENDER_NAME },
-      to: [...recipients].map((email) => ({ email })),
-      subject: `[아차사고] ${statusLabel} - ${hazardLabel(report)}`,
-      htmlContent,
-      ...(attachment.length > 0 ? { attachment } : {}),
-    };
-
-    let brevoRes = await sendToBrevo(apiKey, emailPayload);
-    // 재시도해도 소용없는 오류(예: 400 잘못된 요청, 401 인증 오류)는 바로 실패 처리하고,
-    // 서버 쪽 일시적 오류(5xx)일 때만 1.5초 후 한 번 더 시도
-    if (!brevoRes.ok && brevoRes.status >= 500) {
-      await sleep(1500);
-      brevoRes = await sendToBrevo(apiKey, emailPayload);
+    function buildPayload(recipients, includeIdentity) {
+      return {
+        sender: { email: SENDER_EMAIL, name: SENDER_NAME },
+        to: [...recipients].map((email) => ({ email })),
+        subject: `[아차사고] ${statusLabel} - ${hazardLabel(report)}`,
+        htmlContent: buildHtml(buildRows({ includeIdentity })),
+        ...(attachment.length > 0 ? { attachment } : {}),
+      };
     }
 
-    if (!brevoRes.ok) {
-      const errText = await brevoRes.text();
-      console.error("Brevo 발송 실패(재시도 포함):", brevoRes.status, errText);
+    async function sendWithRetry(payload) {
+      let brevoRes = await sendToBrevo(apiKey, payload);
+      // 재시도해도 소용없는 오류(예: 400 잘못된 요청, 401 인증 오류)는 바로 실패 처리하고,
+      // 서버 쪽 일시적 오류(5xx)일 때만 1.5초 후 한 번 더 시도
+      if (!brevoRes.ok && brevoRes.status >= 500) {
+        await sleep(1500);
+        brevoRes = await sendToBrevo(apiKey, payload);
+      }
+      return brevoRes;
+    }
+
+    const sendJobs = [];
+    if (safetyRecipients.size > 0) sendJobs.push(sendWithRetry(buildPayload(safetyRecipients, true)));
+    if (deptRecipients.size > 0) sendJobs.push(sendWithRetry(buildPayload(deptRecipients, false)));
+
+    const results = await Promise.all(sendJobs);
+    const failed = results.find((r) => !r.ok);
+    if (failed) {
+      const errText = await failed.text();
+      console.error("Brevo 발송 실패(재시도 포함):", failed.status, errText);
       res.status(502).json({ error: "메일 발송에 실패했습니다." });
       return;
     }
