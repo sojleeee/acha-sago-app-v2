@@ -1,0 +1,17 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+# 프론트엔드 코드가 그대로 /api/report 로 요청을 보내도
+# 실제로는 Netlify Function(/.netlify/functions/report)으로 연결되게 함
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# React Router용 SPA fallback (Vercel의 rewrites와 동일한 역할)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
