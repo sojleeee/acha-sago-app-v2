@@ -43,6 +43,7 @@ const DEPT_LIST = [
   "지역상생처", "체육공원처",
   "기술정보처", "연구분석처",
 ];
+const DEPT_UNSURE = "잘 모르겠어요 (안전환경실에서 배정)";
 
 const hazardOf    = (id) => HAZARD_TYPES.find((h) => h.id === id) || HAZARD_TYPES.at(-1);
 const hazardLabel = (r)  => (r.hazard === "etc" && r.hazardLabel) ? r.hazardLabel : hazardOf(r.hazard).label;
@@ -312,6 +313,7 @@ function StepConfirmDefer({ report, onConfirm, onBack }) {
           style={{ width: "100%", background: C.surfaceAlt, border: `1.5px solid ${deptError ? C.red : C.line}`, borderRadius: 10, padding: "12px 14px", fontSize: 14, color: assignedDept ? C.text : C.muted, outline: "none" }}
         >
           <option value="">부서를 선택하세요</option>
+          <option value={DEPT_UNSURE}>{DEPT_UNSURE}</option>
           {DEPT_LIST.map((d) => <option key={d} value={d}>{d}</option>)}
         </select>
         {deptError && <div style={{ fontSize: 11.5, color: C.red, marginTop: 5 }}>부서를 선택해주세요.</div>}
