@@ -16,22 +16,22 @@ const SAFETY_HEAD_EMAILS = [
 // ⚠ 아직 실제 이메일 주소가 확정되지 않아 비워뒀어요. 확정되는 대로 큰따옴표 안에 채워 넣으면 바로 적용됩니다.
 // (안전환경실은 위 SAFETY_HEAD_EMAILS로 항상 받으므로 여기 따로 안 넣어도 됩니다.)
 const DEPT_EMAILS = {
-  "감사실":     { manager: "", safety: "" }, // manager: 관리감독자(부서장), safety: 안전담당자
+  "감사실":     { manager: "mi544@slc.or.kr", safety: "" }, // manager: 관리감독자(부서장), safety: 안전담당자
   "안전환경실": { manager: "", safety: "" },
-  "ESG전략실":  { manager: "", safety: "" },
-  "홍보비서실": { manager: "", safety: "" },
-  "기획조정처": { manager: "", safety: "" },
-  "경영지원처": { manager: "", safety: "" },
-  "매립시설처": { manager: "", safety: "" },
-  "매립운영처": { manager: "", safety: "" },
-  "물환경처":   { manager: "", safety: "" },
-  "자원사업처": { manager: "", safety: "" },
-  "탄소사업처": { manager: "", safety: "" },
-  "에너지사업처": { manager: "", safety: "" },
+  "ESG전략실":  { manager: "heeddonk@slc.or.kr", safety: "" },
+  "홍보비서실": { manager: "mjkim@slc.or.kr", safety: "" },
+  "기획조정처": { manager: "alfs2030@slc.or.kr", safety: "" },
+  "경영지원처": { manager: "rhythm@slc.or.kr", safety: "" },
+  "매립시설처": { manager: "jong7004@slc.or.kr", safety: "" },
+  "매립운영처": { manager: "hipcb@slc.or.kr", safety: "" },
+  "물환경처":   { manager: "hong7002@slc.or.kr", safety: "" },
+  "자원사업처": { manager: "zsjh@slc.or.kr", safety: "" },
+  "탄소사업처": { manager: "jeje89@slc.or.kr", safety: "" },
+  "에너지사업처": { manager: "yh1399@slc.or.kr", safety: "" },
   "지역상생처": { manager: "jhhan@slc.or.kr", safety: "" },
-  "체육공원처": { manager: "", safety: "" },
-  "기술정보처": { manager: "", safety: "" },
-  "연구분석처": { manager: "", safety: "" },
+  "체육공원처": { manager: "yklee@slc.or.kr", safety: "" },
+  "기술정보처": { manager: "lwk007@slc.or.kr", safety: "" },
+  "연구분석처": { manager: "kmc6540@slc.or.kr", safety: "" },
 };
 
 const HAZARD_LABELS = {
