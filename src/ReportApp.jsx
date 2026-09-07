@@ -750,6 +750,7 @@ function ReportForm({ onSubmit }) {
               </tbody>
             </table>
             <p style={{ margin: 0, wordBreak: "keep-all" }}>※ 위의 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 서비스 이용이 제한될 수 있습니다.</p>
+            <p style={{ margin: "10px 0 0", fontWeight: 700, color: C.text, textAlign: "center" }}>수도권매립지관리공사 귀중</p>
           </div>
         )}
       </div>
