@@ -730,9 +730,10 @@ function ReportForm({ onSubmit }) {
         </button>
         {consentOpen && (
           <div style={{ marginTop: 8, marginLeft: 24, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 8, padding: 12, fontSize: 11.5, color: C.muted, lineHeight: 1.6 }}>
-            <p style={{ margin: "0 0 8px", fontWeight: 700, color: C.text }}>&lt;아차사고 발굴앱을 위한 개인정보 수집·이용 동의서&gt;</p>
-            <p style={{ margin: "0 0 10px" }}>수도권매립지관리공사는 아래와 같이 개인정보를 수집·이용하고자 합니다. 내용을 자세히 확인하신 후 동의 여부를 결정해 주시기 바랍니다. 수집된 개인정보는 안전하게 보관되며, 수집 목적 내에서만 이용됩니다.</p>
-            <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 10 }}>
+            <p style={{ margin: "0 0 8px", fontWeight: 700, color: C.text }}>&lt;개인정보 수집·이용 동의서&gt;</p>
+            <p style={{ margin: "0 0 10px" }}>수도권매립지관리공사는 아차사고 신고를 통해 위험요인을 접수·처리하고 우수 신고자 포상을 위해 아래와 같이 개인정보를 수집·이용 하고자 합니다. 내용을 자세히 확인하신 후 동의 여부를 결정해 주시기 바랍니다. 수집된 개인정보는 안전하게 보관되며, 수집목적 내에서만 이용됩니다.</p>
+            <p style={{ margin: "0 0 6px", fontWeight: 700, color: C.text }}>▶ 개인정보 수집·이용 내역 (필수항목)</p>
+            <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 10, wordBreak: "keep-all" }}>
               <thead>
                 <tr>
                   <th style={{ border: `1px solid ${C.line}`, padding: 6, fontWeight: 700, color: C.text, textAlign: "left" }}>개인정보 항목</th>
@@ -742,13 +743,13 @@ function ReportForm({ onSubmit }) {
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>이름, 휴대폰 번호, 소속</td>
-                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>위험요인 신고 접수 및 개선 조치 처리, 담당 부서 배정, 우수 참여자 포상 심사</td>
-                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>수집일로부터 6개월 이내 파기</td>
+                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>이름, 휴대폰번호, 소속</td>
+                  <td style={{ border: `1px solid ${C.line}`, padding: 6 }}>위험요인 신고 접수 및 개선조치처리, 담당 부서 배정, 우수 참여자포상 심사</td>
+                  <td style={{ border: `1px solid ${C.line}`, padding: 6, color: "#2255CC", fontWeight: 700, textDecoration: "underline", fontSize: 12.5 }}>수집일로부터 1년 이내 파기</td>
                 </tr>
               </tbody>
             </table>
-            <p style={{ margin: 0 }}>※ 위의 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 서비스 이용이 제한될 수 있습니다.</p>
+            <p style={{ margin: 0, wordBreak: "keep-all" }}>※ 위의 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 서비스 이용이 제한될 수 있습니다.</p>
           </div>
         )}
       </div>
