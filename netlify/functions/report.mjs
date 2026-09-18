@@ -19,8 +19,8 @@ const DEPT_EMAILS = {
   "안전환경실": { manager: "", safety: "" },
   "ESG전략실":  { manager: "heeddonk@slc.or.kr", safety: "" },
   "홍보비서실": { manager: "mjkim@slc.or.kr", safety: "" },
-  "기획조정처": { manager: "alfs2030@slc.or.kr", safety: "" },
-  "경영지원처": { manager: "rhythm@slc.or.kr", safety: "" },
+  "기획조정처": { manager: "lwk007@slc.or.kr", safety: "" },
+  "경영지원처": { manager: "alfs2030@slc.or.kr", safety: "" },
   "매립시설처": { manager: "jong7004@slc.or.kr", safety: "" },
   "매립운영처": { manager: "hipcb@slc.or.kr", safety: "" },
   "물환경처":   { manager: "hong7002@slc.or.kr", safety: "" },
@@ -29,7 +29,7 @@ const DEPT_EMAILS = {
   "에너지사업처": { manager: "yh1399@slc.or.kr", safety: "" },
   "지역상생처": { manager: "jhhan@slc.or.kr", safety: "" },
   "체육공원처": { manager: "yklee@slc.or.kr", safety: "" },
-  "기술정보처": { manager: "lwk007@slc.or.kr", safety: "" },
+  "기술정보처": { manager: "rhythm@slc.or.kr", safety: "" },
   "연구분석처": { manager: "kmc6540@slc.or.kr", safety: "" },
 };
 
